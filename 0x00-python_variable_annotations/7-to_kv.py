@@ -15,4 +15,4 @@ def to_kv(k: str, v: Union[int, float]) -> Tuple[str, float]:
         Tuple[str, float]: tuble that represnts k & v
         associated with it
     """
-    return tuple([k, v])
+    return tuple([k, v**2])
