@@ -1,0 +1,10 @@
+{
+	"editor.tabSize": 4,
+	"prettier.useTabs": false,
+	"editor.insertSpaces": true,
+	"editor.formatOnSave": true,
+	"[python]": {
+		"editor.defaultFormatter": "ms-python.autopep8"
+	},
+	"python.formatting.provider": "autopep8"
+}
