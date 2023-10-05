@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import math
 """ module that have floor function
 """
 
@@ -13,4 +12,4 @@ def floor(n: float) -> int:
     Returns:
         int: integer part of the input floating point number
     """
-    return math.floor(n)
+    return int(n)
