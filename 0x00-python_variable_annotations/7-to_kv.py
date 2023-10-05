@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-from typing import Tuple, Dict, Union
 """ module that define sum_mixed_list function
 """
+from typing import Tuple, Dict, Union
 
 
 def to_kv(k: str, v: Union[int, float]) -> Tuple[str, float]:
