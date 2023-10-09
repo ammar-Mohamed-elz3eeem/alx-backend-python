@@ -7,5 +7,5 @@ import random
 
 async def wait_random(max_delay = 0):
     random_num = random.random() * 15
-    asyncio.sleep(random_num)
+    await asyncio.sleep(random_num)
     return random_num
