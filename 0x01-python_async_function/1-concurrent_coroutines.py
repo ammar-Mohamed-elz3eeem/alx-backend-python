@@ -20,7 +20,7 @@ async def wait_n(n: int, max_delay: int = 0) -> List[float]:
     """
     delays: List[float] = []
     all_delays: List[float] = []
-    for i in range (0, n):
+    for i in range(0, n):
         delays.append(wait_random(max_delay))
     for delay in asyncio.as_completed(delays):
         fifo = await delay
