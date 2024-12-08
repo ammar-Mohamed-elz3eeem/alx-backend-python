@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 import mysql.connector
 from mysql.connector import MySQLConnection
-from typing import TypedDict
+from typing import TypedDict, Optional
 
 
 class User(TypedDict):
     """ This is a custom type for user that exists in database.
     """
+    user_id: str
     name: str
     email: str
     age: int
@@ -25,16 +26,19 @@ def connect_db(dbname: str = '', attempts: int = 3) -> MySQLConnection:
     Returns:
         MySQLConnection: This is a connection to the mysql server.
     """
+
+    config = {
+        "host": "127.0.0.1",
+        "port": 3306,
+        "user": "root",
+        "password": "Za158269347",
+        "database": dbname
+    }
+
     while attempts > 0:
         try:
             attempts -= 1
-            connection = mysql.connector.connect(
-                host="127.0.0.1",
-                port=3306,
-                user="root",
-                password="Za158269347",
-                dbname=dbname
-            )
+            connection = mysql.connector.connect(**config)
             return connection
         except Exception as e:
             print(f"Attempts remaining: {attempts}")
@@ -59,7 +63,7 @@ def create_database(connection: MySQLConnection) -> None:
         print("Error creating database", err)
 
 
-def connect_to_prodev() -> None:
+def connect_to_prodev() -> Optional[MySQLConnection]:
     """ This function connects the mysql server to the database
         ALX_prodev
     """
@@ -80,6 +84,9 @@ def create_table(connection: MySQLConnection) -> None:
         return
     try:
         cursor = connection.cursor()
+        cursor.execute("""
+            DROP TABLE IF EXISTS user_data
+        """)
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS user_data (
                 user_id CHAR(36) PRIMARY KEY,
