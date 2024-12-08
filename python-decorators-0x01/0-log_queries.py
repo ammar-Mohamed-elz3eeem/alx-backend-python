@@ -1,5 +1,6 @@
 import sqlite3
 import functools
+from datetime import datetime
 
 # decorator to lof SQL queries
 
@@ -22,7 +23,7 @@ def log_queries(func):
         query = kwargs.get("query", query if len(args)
                            > 0 and args[0] else None)
         if query:
-            print(f"[Database::Query::Excution]: {query}")
+            print(f"[Database::Query::Excution -- {datetime.now()}]: {query}")
         return func(*args, **kwargs)
     return log_queries_wrapper
 
@@ -47,4 +48,4 @@ def fetch_all_users(query):
 
 # fetch users while logging the query
 users = fetch_all_users(
-    query="CREATE TABLE users(id int PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL);")
+    query="INSERT INTO users VALUES (1, 'ammar', 'ammar@ammar.com')")
