@@ -22,8 +22,10 @@ def stream_users_in_batches(batch_size: int) -> Generator[List[User], None, None
 
         for i in range(0, len(users), batch_size):
             yield users[i:i + batch_size]
+        return True
     except Exception as err:
         print("Failed to read from database", err)
+        return False
 
 
 def batch_processing(batch_size: int) -> Generator[User, None, None]:
@@ -42,3 +44,4 @@ def batch_processing(batch_size: int) -> Generator[User, None, None]:
         for user in batch:
             if user["age"] > 25:
                 yield user
+    return True
