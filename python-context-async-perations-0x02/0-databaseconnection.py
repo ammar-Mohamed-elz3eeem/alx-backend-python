@@ -51,6 +51,6 @@ config = {
 }
 
 with DatabaseConnection(config) as conn:
-    conn.execute("SELECT * FROM user_data LIMIT 5")
+    conn.execute("SELECT * FROM user_data")
     data = conn.fetchall()
     print(data)
