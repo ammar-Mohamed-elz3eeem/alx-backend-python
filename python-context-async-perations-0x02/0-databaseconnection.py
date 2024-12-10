@@ -51,6 +51,6 @@ config = {
 }
 
 with DatabaseConnection(config) as conn:
-    conn.execute("SELECT * FROM user_data")
+    conn.execute("SELECT * FROM users")
     data = conn.fetchall()
     print(data)
