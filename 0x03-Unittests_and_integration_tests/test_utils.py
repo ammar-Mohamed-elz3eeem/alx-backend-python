@@ -4,7 +4,7 @@
 
 import unittest
 import unittest.mock
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 import utils
 from parameterized import parameterized, param
 
@@ -105,12 +105,24 @@ class TestMemoize(unittest.TestCase):
         """ This is a test case for the memoize function
         """
         class TestClass:
+            """ This is a testing class to be used to test that
+                memoize function is working as expected
+            """
             def a_method(self):
                 return 42
 
             @utils.memoize
             def a_property(self):
                 return self.a_method()
+
+        with patch.object(TestClass, "a_method",
+                          return_value=lambda: 42) as test_a_method:
+
+            my_class = TestClass()
+            self.assertEqual(my_class.a_property(), 42)
+            self.assertEqual(my_class.a_property(), 42)
+            self.assertEqual(my_class.a_property(), 42)
+            test_a_method.assert_called_once()
 
 
 # if __name__ == '__main__':
