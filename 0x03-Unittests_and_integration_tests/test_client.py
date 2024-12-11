@@ -4,6 +4,7 @@
 
 import utils
 import client
+import unittest
 from unittest import TestCase
 from unittest.mock import PropertyMock, patch, Mock, MagicMock
 from parameterized import parameterized, param, parameterized_class
@@ -150,21 +151,14 @@ class TestGithubOrgClient(TestCase):
         "apache2_repos": TEST_PAYLOAD[0][3]
     },
 ])
-class TestIntegrationGithubOrgClient(TestCase):
-    """ Integeration testing for all features given in the GithubOrgClient
-        class using test fixture and mocking abilities to make no external
-        requests to API but to monkey patch them and make sure correct
-        result are returned.
-
-    Args:
-        TestCase (unittest.TestCase)
-            This is the base class for all tests.
-    """
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """ Integeration testing for all features given in the GithubOrgClient """
 
     @classmethod
-    def setUpClass(cls) -> None:
-        """ Sets up class fixtures before running any test.
-        """
+    def setUpClass(cls):
+        """Hook method for setting up class fixture
+        before running tests in the class."""
+
         route_payload = {
             "https://api.github.com/orgs/google": cls.org_payload,
             "https://api.github.com/orgs/google/repos": cls.repos_payload
@@ -179,12 +173,8 @@ class TestIntegrationGithubOrgClient(TestCase):
         cls.get_patcher = patch("requests.get", side_effect=get_side_effect)
         cls.get_patcher.start()
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        """ Stop the patcher after all tests are done and
-            also remove all fixtures.
-        """
-        cls.get_patcher.stop()
+    def setUp(self):
+        return super().setUp()
 
     def test_public_repos(self) -> None:
         """ Test that public repos will return the correct repos
@@ -202,3 +192,13 @@ class TestIntegrationGithubOrgClient(TestCase):
             client.GithubOrgClient("google").public_repos("apache-2.0"),
             self.apache2_repos
         )
+
+    def tearDown(self):
+        return super().tearDown()
+
+    @classmethod
+    def tearDownClass(cls):
+        """Hook method for deconstructing the class fixture
+        after running all tests in the class."""
+
+        cls.get_patcher.stop()
