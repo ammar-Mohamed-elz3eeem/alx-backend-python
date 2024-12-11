@@ -162,7 +162,7 @@ class TestIntegrationGithubOrgClient(TestCase):
     """
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         """ Sets up class fixtures before running any test.
         """
         route_payload = {
@@ -179,7 +179,7 @@ class TestIntegrationGithubOrgClient(TestCase):
         cls.get_patcher = patch("requests.get", side_effect=get_side_effect)
         cls.get_patcher.start()
 
-    def test_public_urls(self):
+    def test_public_urls(self) -> None:
         """ Test that public repos will return the correct repos
         """
         self.assertEqual(
@@ -187,7 +187,7 @@ class TestIntegrationGithubOrgClient(TestCase):
             self.expected_repos
         )
 
-    def test_public_repos_with_apache_license(self):
+    def test_public_repos_with_apache_license(self) -> None:
         """ Test that public_repos will return repos with the given
             license
         """
@@ -197,7 +197,7 @@ class TestIntegrationGithubOrgClient(TestCase):
         )
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         """ Stop the patcher after all tests are done and
             also remove all fixtures.
         """
