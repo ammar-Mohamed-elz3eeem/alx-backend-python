@@ -179,7 +179,14 @@ class TestIntegrationGithubOrgClient(TestCase):
         cls.get_patcher = patch("requests.get", side_effect=get_side_effect)
         cls.get_patcher.start()
 
-    def test_public_urls(self) -> None:
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """ Stop the patcher after all tests are done and
+            also remove all fixtures.
+        """
+        cls.get_patcher.stop()
+
+    def test_public_repos(self) -> None:
         """ Test that public repos will return the correct repos
         """
         self.assertEqual(
@@ -187,7 +194,7 @@ class TestIntegrationGithubOrgClient(TestCase):
             self.expected_repos
         )
 
-    def test_public_repos_with_apache_license(self) -> None:
+    def test_public_repos_with_license(self) -> None:
         """ Test that public_repos will return repos with the given
             license
         """
@@ -195,10 +202,3 @@ class TestIntegrationGithubOrgClient(TestCase):
             client.GithubOrgClient("google").public_repos("apache-2.0"),
             self.apache2_repos
         )
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        """ Stop the patcher after all tests are done and
-            also remove all fixtures.
-        """
-        cls.get_patcher.stop()
