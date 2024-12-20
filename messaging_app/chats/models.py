@@ -5,6 +5,9 @@ import uuid
 
 
 class User(AbstractUser):
+    """
+    This is the model for the database table `users`
+    """
     ROLE_CHOICES = (
         ('guest', 'Guest'),
         ('host', 'Host'),
@@ -25,32 +28,51 @@ class User(AbstractUser):
     email = models.EmailField()
 
     class Meta:
+        """
+        This is the meta class that contains the table
+        custom options.
+        """
         db_table = 'users'
 
 
 class Conversation(models.Model):
+    """
+    This is the model for the database table `conversation`
+    """
     id = models.UUIDField(db_column='conversation_id',
                           primary_key=True,
                           default=uuid.uuid4)
     participants = models.ForeignKey(User,
-                                        on_delete=models.CASCADE,
-                                        related_name='conversations')
+                                     on_delete=models.CASCADE,
+                                     related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        """
+        This is the meta class that contains the table
+        custom options.
+        """
         db_table = 'conversations'
 
 
 class Message(models.Model):
+    """
+    This is the model for the database table `messages`
+    """
     id = models.UUIDField(db_column='message_id',
                           primary_key=True,
                           default=uuid.uuid4)
     sender = models.ForeignKey(User,
-                                  on_delete=models.CASCADE,
-                                  related_name="messages_sent")
+                               on_delete=models.CASCADE,
+                               related_name="messages_sent")
     message_body = models.TextField(null=False)
     sent_at = models.DateTimeField(auto_now_add=True)
-    conversations = models.ManyToManyField(Conversation, related_name='messages')
+    conversations = models.ManyToManyField(Conversation,
+                                           related_name='messages')
 
     class Meta:
+        """
+        This is the meta class that contains the table
+        custom options.
+        """
         db_table = 'messages'
