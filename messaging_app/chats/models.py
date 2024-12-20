@@ -28,20 +28,6 @@ class User(AbstractUser):
         db_table = 'users'
 
 
-class Message(models.Model):
-    id = models.UUIDField(db_column='message_id',
-                          primary_key=True,
-                          default=uuid.uuid4)
-    sender = models.ForeignKey(User,
-                                  on_delete=models.CASCADE,
-                                  related_name="messages_sent")
-    message_body = models.TextField(null=False)
-    sent_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'messages'
-
-
 class Conversation(models.Model):
     id = models.UUIDField(db_column='conversation_id',
                           primary_key=True,
@@ -53,3 +39,18 @@ class Conversation(models.Model):
 
     class Meta:
         db_table = 'conversations'
+
+
+class Message(models.Model):
+    id = models.UUIDField(db_column='message_id',
+                          primary_key=True,
+                          default=uuid.uuid4)
+    sender = models.ForeignKey(User,
+                                  on_delete=models.CASCADE,
+                                  related_name="messages_sent")
+    message_body = models.TextField(null=False)
+    sent_at = models.DateTimeField(auto_now_add=True)
+    conversations = models.ManyToManyField(Conversation, related_name='messages')
+
+    class Meta:
+        db_table = 'messages'
