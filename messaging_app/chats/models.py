@@ -1,7 +1,7 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
-import uuid
 
 
 class User(AbstractUser):
@@ -13,19 +13,20 @@ class User(AbstractUser):
         ('host', 'Host'),
         ('admin', 'Admin')
     )
-    id = models.UUIDField(db_column='user_id',
-                          primary_key=True,
-                          default=uuid.uuid4)
-    password = models.CharField(db_column='password_hash', max_length=100)
+    user_id = models.UUIDField(primary_key=True,
+                               default=uuid.uuid4,
+                               editable=False)
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    password = models.CharField(db_column='password_hash',
+                                max_length=100)
     phone_number = models.CharField(max_length=20)
     role = models.CharField(max_length=10,
                             choices=ROLE_CHOICES,
                             default='guest')
     date_joined = models.DateTimeField(db_column='created_at',
                                        default=timezone.now)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField()
 
     class Meta:
         """
@@ -34,17 +35,22 @@ class User(AbstractUser):
         """
         db_table = 'users'
 
+    def __str__(self):
+        """
+        return the string representation of the User object
+        """
+        return f"{self.first_name} {self.last_name} ({self.email})"
+
 
 class Conversation(models.Model):
     """
     This is the model for the database table `conversation`
     """
-    id = models.UUIDField(db_column='conversation_id',
-                          primary_key=True,
-                          default=uuid.uuid4)
-    participants = models.ForeignKey(User,
-                                     on_delete=models.CASCADE,
-                                     related_name='conversations')
+    conversation_id = models.UUIDField(primary_key=True,
+                                       default=uuid.uuid4,
+                                       editable=False)
+    participants = models.ManyToManyField(User,
+                                          related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -54,21 +60,29 @@ class Conversation(models.Model):
         """
         db_table = 'conversations'
 
+    def __str__(self):
+        """
+        return the string representation of the Conversation
+        object
+        """
+        return f"Conversation {self.id}"
+
 
 class Message(models.Model):
     """
     This is the model for the database table `messages`
     """
-    id = models.UUIDField(db_column='message_id',
-                          primary_key=True,
-                          default=uuid.uuid4)
+    message_id = models.UUIDField(primary_key=True,
+                                  default=uuid.uuid4,
+                                  editable=False)
     sender = models.ForeignKey(User,
                                on_delete=models.CASCADE,
-                               related_name="messages_sent")
+                               related_name="sent_messages")
+    conversations = models.ForeignKey(Conversation,
+                                      on_delete=models.CASCADE,
+                                      related_name='messages')
     message_body = models.TextField(null=False)
     sent_at = models.DateTimeField(auto_now_add=True)
-    conversations = models.ManyToManyField(Conversation,
-                                           related_name='messages')
 
     class Meta:
         """
@@ -76,3 +90,10 @@ class Message(models.Model):
         custom options.
         """
         db_table = 'messages'
+
+    def __str__(self):
+        """
+        return the string representation of the Message
+        object
+        """
+        return f"Message {self.message_id} From {self.sender}"
