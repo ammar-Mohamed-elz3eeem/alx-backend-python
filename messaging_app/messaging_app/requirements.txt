@@ -1,0 +1,5 @@
+django
+djangorestframework
+django-filter
+djangorestframework-simplejwt
+drf-nested-routers
