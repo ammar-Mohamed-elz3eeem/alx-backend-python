@@ -1,0 +1,5 @@
+django
+djangorestframework
+django-filters
+djangorestframework-simplejwt
+rest-framework-nested
