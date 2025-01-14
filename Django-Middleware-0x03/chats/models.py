@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Permission, Group
 from django.utils import timezone
 
 
@@ -27,13 +27,17 @@ class User(AbstractUser):
                             default='guest')
     date_joined = models.DateTimeField(db_column='created_at',
                                        default=timezone.now)
+    user_permissions = models.ManyToManyField(
+        Permission,
+        blank=True,
+        related_name='chat_user_permissions'  # Change related_name to avoid clashes
+    )
 
-    class Meta:
-        """
-        This is the meta class that contains the table
-        custom options.
-        """
-        db_table = 'users'
+    groups = models.ManyToManyField(
+        Group,
+        blank=True,
+        related_name='chat_user_groups'  # Change related_name to avoid clashes
+    )
 
     def __str__(self):
         """
